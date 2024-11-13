@@ -20,8 +20,8 @@ public class DisconnectActionCommand : IDisconnectActionCommand
         // _textEditor.SetText(_backup);
     }
 
-    public int GetResult()
+    public Result<int> GetResult()
     {
-        return _result;
+        return Result<int>.Success(_result);
     }
 }

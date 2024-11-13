@@ -17,17 +17,19 @@ public class AddTextCommand : IAddTextCommand
 
     public void Execute()
     {
-        _result = _textEditor.GetText();
-        _textEditor.AddText(_textToAdd);
+        var result = _textEditor.GetText();
+        _textEditor.AddText(result);
+        
+        _result = result;
     }
 
     public void Undo()
     {
-        _textEditor.SetText(_result);
+        // _textEditor.SetText(_result);
     }
 
-    public string GetResult()
+    public Result<string> GetResult()
     {
-        return _result;
+        return Result<string>.Success(_result);
     }
 }

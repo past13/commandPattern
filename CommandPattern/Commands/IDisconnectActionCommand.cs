@@ -2,6 +2,6 @@
 
 namespace CommandPattern.Commands;
 
-public interface IDisconnectActionCommand : ICommandBase<int>
+public interface IDisconnectActionCommand : ICommandBase<Result<int>>
 {
 }

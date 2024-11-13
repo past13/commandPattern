@@ -9,8 +9,8 @@ var disconnectActionCommand = new DisconnectActionCommand(commandInvoker.GetNext
 
 
 
-commandInvoker.ExecuteCommand<AddTextCommand, string>(addHelloCommand);
-commandInvoker.ExecuteCommand<DisconnectActionCommand, int>(disconnectActionCommand);
+commandInvoker.ExecuteCommand<AddTextCommand, Result<string>>(addHelloCommand);
+commandInvoker.ExecuteCommand<DisconnectActionCommand, Result<int>>(disconnectActionCommand);
 
 commandInvoker.UndoSpecificCommand(addHelloCommand.Id);
 
