@@ -2,10 +2,20 @@
 
 public abstract class CommandResultBase
 {
-    public ICommandBase Command { get; }
+    public HrisSteps Step { get; }
 
-    protected CommandResultBase(ICommandBase command)
+    protected CommandResultBase(HrisSteps step)
     {
-        Command = command;
+        Step = step;
+    }
+}
+
+public class CommandResult<TResult> : CommandResultBase
+{
+    public TResult Result { get; }
+
+    public CommandResult(HrisSteps step, TResult result) : base(step)
+    {
+        Result = result;
     }
 }

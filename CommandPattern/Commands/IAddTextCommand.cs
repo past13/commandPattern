@@ -2,6 +2,6 @@
 
 namespace CommandPattern.Commands;
 
-public interface IAddTextCommand : ICommandBase<Result<string>>
+public interface IAddTextCommand : ICommandBase
 {
 }

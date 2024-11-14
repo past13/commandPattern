@@ -1,27 +1,24 @@
-﻿namespace CommandPattern.Commands;
+﻿using CommandPattern.Commands.BaseEntities;
 
-public class DisconnectActionCommand : IDisconnectActionCommand
+namespace CommandPattern.Commands;
+
+public class DisconnectActionCommand : ICommandBase<int>
 {
     private int _result;
     public int Id { get; }
-
-    public DisconnectActionCommand(int id)
-    {
-        Id = id;
-    }
 
     public void Execute()
     {
         _result = 123;
     }
 
-    public void Undo()
+    public int GetResult()
     {
-        // _textEditor.SetText(_backup);
+        return _result;
     }
 
-    public Result<int> GetResult()
+    public HrisSteps GetCurrentStep()
     {
-        return Result<int>.Success(_result);
+        return HrisSteps.DisconnectAction;
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace CommandPattern.Commands;
+﻿using CommandPattern.Commands.BaseEntities;
 
-public class AddTextCommand : IAddTextCommand
+namespace CommandPattern.Commands;
+
+public class AddTextCommand : ICommandBase<string>
 {
     private readonly TextEditor _textEditor;
     private readonly string _textToAdd;
@@ -8,28 +10,24 @@ public class AddTextCommand : IAddTextCommand
 
     public int Id { get; }
     
-    public AddTextCommand(TextEditor textEditor, string textToAdd, int id)
+    public AddTextCommand(TextEditor textEditor, string textToAdd)
     {
         _textEditor = textEditor;
         _textToAdd = textToAdd;
-        Id = id;
     }
 
     public void Execute()
     {
-        var result = _textEditor.GetText();
-        _textEditor.AddText(result);
-        
-        _result = result;
+        _textEditor.AddText(_textToAdd);
     }
 
-    public void Undo()
+    public HrisSteps GetCurrentStep()
     {
-        // _textEditor.SetText(_result);
+        return HrisSteps.AddText;
     }
-
-    public Result<string> GetResult()
+    
+    public string GetResult()
     {
-        return Result<string>.Success(_result);
+        return _textEditor.GetText();
     }
 }

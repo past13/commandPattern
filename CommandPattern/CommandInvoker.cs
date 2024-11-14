@@ -4,34 +4,15 @@ namespace CommandPattern;
 
 public class CommandInvoker
 {
-    private readonly List<CommandResultBase> _commandHistory = new();
-    private int _nextId = 1;
-    
+    private readonly Dictionary<HrisSteps, CommandResultBase?> _commandHistory = new();
+
     public void ExecuteCommand<TCommand, TResult>(TCommand command)
-        where TCommand : ICommandBase, ICommandBase<TResult>
+        where TCommand : ICommandBase<TResult>
     {
         command.Execute();
-        var result = command.GetResult();
-        var commandResult = new CommandResult<TResult>(command, result);
-        _commandHistory.Add(commandResult);
-    }
-    
-    public void UndoSpecificCommand(int commandId)
-    {
-        var entry = _commandHistory
-            .FirstOrDefault(e => e.Command.Id == commandId);
 
-        if (entry == null)
-        {
-            return;
-        }
-        
-        entry.Command.Undo();
-        _commandHistory.Remove(entry);
-    }
-    
-    public int GetNextCommandId()
-    {
-        return _nextId++;
+        var currentStep = command.GetCurrentStep();
+        var result = command.GetResult();
+        _commandHistory[currentStep] = new CommandResult<TResult>(currentStep, result);
     }
 }
