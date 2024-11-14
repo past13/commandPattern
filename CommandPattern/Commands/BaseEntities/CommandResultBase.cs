@@ -1,21 +1,23 @@
 ﻿namespace CommandPattern.Commands.BaseEntities;
 
-public abstract class CommandResultBase
+public interface ICommandResult
 {
-    public HrisSteps Step { get; }
-
-    protected CommandResultBase(HrisSteps step)
-    {
-        Step = step;
-    }
+    object Value { get; }
+    object Result { get; }
 }
 
-public class CommandResult<TResult> : CommandResultBase
+public class CommandResult<TValue, TResult> : ICommandResult
 {
+    public TValue Value { get; }
     public TResult Result { get; }
 
-    public CommandResult(HrisSteps step, TResult result) : base(step)
+    public CommandResult(TValue value, TResult result)
     {
+        Value = value;
         Result = result;
     }
+
+    object ICommandResult.Value => Value;
+    object ICommandResult.Result => Result;
 }
+

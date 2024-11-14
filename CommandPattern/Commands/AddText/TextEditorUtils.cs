@@ -1,4 +1,4 @@
-﻿namespace CommandPattern;
+﻿namespace CommandPattern.Commands.AddText;
 
 public class TextEditor
 {

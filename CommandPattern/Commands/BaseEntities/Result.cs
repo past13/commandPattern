@@ -1,4 +1,4 @@
-﻿namespace CommandPattern.Commands;
+﻿namespace CommandPattern.Commands.BaseEntities;
 
 public class Result<T>
 {

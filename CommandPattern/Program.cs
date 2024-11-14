@@ -1,27 +1,21 @@
 ﻿using CommandPattern;
-using CommandPattern.Commands;
+using CommandPattern.Commands.AddText;
 using CommandPattern.Commands.BaseEntities;
-
-var stepList = new Dictionary<HrisSteps, CommandResultBase?>();
-foreach (HrisSteps step in Enum.GetValues(typeof(HrisSteps)))
-{
-    stepList.Add(step, null); 
-}
+using CommandPattern.Commands.DisconnectAction;
 
 var textEditor = new TextEditor();
-var commandInvoker = new CommandInvoker();
 
-var addHelloCommand = new AddTextCommand(textEditor, "Hello World!");
-var disconnectActionCommand = new DisconnectActionCommand();
+var commandInvoker = new CommandInvoker([]);
 
-commandInvoker.ExecuteCommand<AddTextCommand, string>(addHelloCommand);
-commandInvoker.ExecuteCommand<DisconnectActionCommand, int>(disconnectActionCommand);
+var disconnectActionCommand = new DisconnectActionCommand(20);
+commandInvoker.ExecuteCommand<DisconnectActionCommand, int, Result<int>>(disconnectActionCommand);
 
-// commandInvoker.UndoSpecificCommand(addHelloCommand.Id);
+var history = commandInvoker.GetCommandHistory();
 
+var commandInvoker1 = new CommandInvoker(history);
 
+var addHelloCommand1 = new AddTextCommand(textEditor, "Well!");
+commandInvoker1.ExecuteCommand<AddTextCommand, string, Result<string>>(addHelloCommand1);
 
-
-var test = "";
-
+var test = 123;
 

@@ -1,4 +1,4 @@
-﻿namespace CommandPattern;
+﻿namespace CommandPattern.Commands.BaseEntities;
 
 public enum HrisSteps
 {
