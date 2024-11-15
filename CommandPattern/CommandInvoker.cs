@@ -1,12 +1,12 @@
 ﻿using CommandPattern.Commands.BaseEntities;
+using CommandPattern.Serialize;
 
 namespace CommandPattern;
 
 public class CommandInvoker
 {
-    private readonly Dictionary<HrisSteps, ICommandResult?> _commandHistory = new();
-
-    public CommandInvoker(Dictionary<HrisSteps, ICommandResult?> commandHistory)
+    private readonly Dictionary<HrisSteps, SerializableObject?> _commandHistory = new();
+    public CommandInvoker(Dictionary<HrisSteps, SerializableObject?> commandHistory)
     {
         if (commandHistory.Count > 0)
         {
@@ -25,13 +25,13 @@ public class CommandInvoker
     {
         command.Validate();
         command.Execute();
-        
-        var resultData = new CommandResult<TResult, TValue>(command.GetResult(), command.Get());
 
-        _commandHistory[command.GetCurrentStep()] = resultData;
+        var resultData = new CommandResult<TValue, TResult>(command.Get(), command.GetResult());
+
+        _commandHistory[command.GetCurrentStep()] = new SerializableObject(resultData);
     }
     
-    public Dictionary<HrisSteps, ICommandResult?> GetCommandHistory()
+    public Dictionary<HrisSteps, SerializableObject?> GetCommandHistory()
     {
         return _commandHistory;
     }

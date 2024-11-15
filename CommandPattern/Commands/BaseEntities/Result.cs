@@ -2,11 +2,11 @@
 
 public class Result<T>
 {
-    public T Data { get; private set; }
-    public string Error { get; private set; }
+    public T Data { get; set; }
+    public string Error { get; set; }
     public bool IsSuccess => string.IsNullOrEmpty(Error);
     
-    private Result(T value, string errorMessage)
+    public Result(T value, string errorMessage)
     {
         Data = value;
         Error = errorMessage;
