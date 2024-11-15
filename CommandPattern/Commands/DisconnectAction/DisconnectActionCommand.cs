@@ -29,14 +29,14 @@ public class DisconnectActionCommand : ICommandBase<int, Result<int>>
         _result = Result<int>.Success(Value * 1000);
     }
     
-    public int Get()
-    {
-        return Value;
-    }
-    
     public HrisSteps GetCurrentStep()
     {
         return HrisSteps.DisconnectAction;
+    }
+    
+    public int Get()
+    {
+        return Value;
     }
     
     public Result<int> GetResult()

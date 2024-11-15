@@ -20,14 +20,12 @@ public class CommandInvoker
         }
     }
 
-    public void ExecuteCommand<TCommand, TValue, TResult>(TCommand command)
-        where TCommand : ICommandBase<TValue, TResult>
+    public void ExecuteCommand<TValue, TResult>(ICommandBase<TValue, TResult> command)
     {
         command.Validate();
         command.Execute();
 
         var resultData = new CommandResult<TValue, TResult>(command.Get(), command.GetResult());
-
         _commandHistory[command.GetCurrentStep()] = new SerializableObject(resultData);
     }
     

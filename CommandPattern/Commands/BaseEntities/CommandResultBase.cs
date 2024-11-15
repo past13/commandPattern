@@ -1,12 +1,6 @@
 ﻿namespace CommandPattern.Commands.BaseEntities;
 
-public interface ICommandResult<out TValue, out TResult>
-{
-    TValue Value { get; }
-    TResult Result { get; }
-}
-
-public class CommandResult<TValue, TResult> : ICommandResult<TValue, TResult>
+public class CommandResult<TValue, TResult>
 {
     public TValue Value { get; }
     public TResult Result { get; }
