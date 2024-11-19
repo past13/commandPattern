@@ -2,20 +2,20 @@
 
 namespace CommandPattern.Commands.DisconnectAction;
 
-public class DisconnectActionCommand : ICommandBase<int, Result<int>>
+public class ConnectActionCommand : ICommandBase<int, Result<int>>
 {
     private bool _isValid;
     private Result<int> _result;
     private int Value { get; }
 
-    public DisconnectActionCommand(int value)
+    public ConnectActionCommand(int value)
     {
         Value = value;
     }
 
     private void Validate()
     {
-        _isValid = true;
+        _isValid = false;
     }
 
     public void Execute()
@@ -28,12 +28,12 @@ public class DisconnectActionCommand : ICommandBase<int, Result<int>>
             return;
         }
         
-        _result = Result<int>.Success(Value * 2000);
+        _result = Result<int>.Success(Value * 1000);
     }
     
     public Enum GetCurrentStep()
     {
-        return TestBSteps.DisconnectAction;
+        return TestBSteps.ConnectAction;
     }
     
     public int Get()

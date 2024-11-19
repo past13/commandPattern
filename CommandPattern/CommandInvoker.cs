@@ -3,33 +3,33 @@ using CommandPattern.Serialize;
 
 namespace CommandPattern;
 
-public class CommandInvoker
+public class CommandInvoker<TStep> where TStep : Enum
 {
-    private readonly Dictionary<HrisSteps, SerializableObject?> _commandHistory = new();
-    public CommandInvoker(Dictionary<HrisSteps, SerializableObject?> commandHistory)
+    private readonly Dictionary<TStep, SerializableObject?> _commandHistory;
+    public CommandInvoker(Dictionary<TStep, SerializableObject?> commandHistory)
     {
-        if (commandHistory.Count > 0)
-        {
-            _commandHistory = commandHistory;
-            return;
-        }
-
-        foreach (HrisSteps step in Enum.GetValues(typeof(HrisSteps)))
-        {
-            _commandHistory.Add(step, null);
-        }
+        _commandHistory = commandHistory.Count > 0 ? commandHistory : 
+            Enum.GetValues(typeof(TStep))
+                .Cast<TStep>()
+                .ToDictionary(step => step, SerializableObject? (_) => null);
     }
 
     public void ExecuteCommand<TValue, TResult>(ICommandBase<TValue, TResult> command)
     {
-        command.Validate();
         command.Execute();
 
         var resultData = new CommandResult<TValue, TResult>(command.Get(), command.GetResult());
-        _commandHistory[command.GetCurrentStep()] = new SerializableObject(resultData);
+        if (Enum.TryParse(typeof(TStep), command.GetCurrentStep().ToString(), out var step))
+        {
+            _commandHistory[(TStep)step] = new SerializableObject(resultData);
+        }
+        else
+        {
+            throw new InvalidOperationException($"Invalid step: {command.GetCurrentStep()} for type: {typeof(TStep)}");
+        }
     }
     
-    public Dictionary<HrisSteps, SerializableObject?> GetCommandHistory()
+    public Dictionary<TStep, SerializableObject?> GetCommandHistory()
     {
         return _commandHistory;
     }

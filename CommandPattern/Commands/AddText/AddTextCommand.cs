@@ -19,13 +19,15 @@ public class AddTextCommand : ICommandBase<string, Result<string>>
         Value = textToAdd;
     }
 
-    public void Validate()
+    private void Validate()
     {
         _isValid = false;
     }
 
     public void Execute()
     {
+        Validate();
+        
         if (!_isValid)
         {
             _result = Result<string>.Failure("fail");
@@ -41,7 +43,7 @@ public class AddTextCommand : ICommandBase<string, Result<string>>
         return Value;
     }
     
-    public HrisSteps GetCurrentStep()
+    public Enum GetCurrentStep()
     {
         return HrisSteps.AddText;
     }
