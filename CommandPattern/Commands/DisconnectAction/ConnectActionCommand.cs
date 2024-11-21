@@ -2,11 +2,11 @@
 
 namespace CommandPattern.Commands.DisconnectAction;
 
-public class ConnectActionCommand : ICommandBase<int, Result<int>>
+public class ConnectActionCommand : ICommandBase 
 {
     private bool _isValid;
-    private Result<int> _result;
-    private int Value { get; }
+    private Result<int> Result { get; set; }
+    private int Value { get; set; }
 
     public ConnectActionCommand(int value)
     {
@@ -15,7 +15,12 @@ public class ConnectActionCommand : ICommandBase<int, Result<int>>
 
     private void Validate()
     {
-        _isValid = false;
+        _isValid = true;
+    }
+
+    public bool GetState()
+    {
+        return true;
     }
 
     public void Execute()
@@ -24,18 +29,18 @@ public class ConnectActionCommand : ICommandBase<int, Result<int>>
         
         if (!_isValid)
         {
-            _result = Result<int>.Failure("fail");
+            Result = Result<int>.Failure("fail");
             return;
         }
         
-        _result = Result<int>.Success(Value * 1000);
+        Result = Result<int>.Success(Value * 1000);
     }
-    
+
     public Enum GetCurrentStep()
     {
         return TestBSteps.ConnectAction;
     }
-    
+
     public int Get()
     {
         return Value;
@@ -43,6 +48,6 @@ public class ConnectActionCommand : ICommandBase<int, Result<int>>
     
     public Result<int> GetResult()
     {
-        return _result;
+        return Result;
     }
 }

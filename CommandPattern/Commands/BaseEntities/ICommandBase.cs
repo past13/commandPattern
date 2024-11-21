@@ -1,9 +1,8 @@
 ﻿namespace CommandPattern.Commands.BaseEntities;
 
-public interface ICommandBase<out TValue, out TResult>
+public interface ICommandBase
 {
-    void Execute();
-    TValue Get();
-    TResult GetResult();
     Enum GetCurrentStep();
+    bool GetState();
+    void Execute();
 }

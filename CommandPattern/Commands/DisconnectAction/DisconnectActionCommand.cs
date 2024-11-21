@@ -2,12 +2,12 @@
 
 namespace CommandPattern.Commands.DisconnectAction;
 
-public class DisconnectActionCommand : ICommandBase<int, Result<int>>
+public class DisconnectActionCommand : ICommandBase
 {
-    private bool _isValid;
-    private Result<int> _result;
+    private bool _isValid { get; set; }
+    private Result<int> Result { get; set; }
     private int Value { get; }
-
+    
     public DisconnectActionCommand(int value)
     {
         Value = value;
@@ -18,31 +18,26 @@ public class DisconnectActionCommand : ICommandBase<int, Result<int>>
         _isValid = true;
     }
 
+    public bool GetState()
+    {
+        return true;
+    }
+
     public void Execute()
     {
         Validate();
         
         if (!_isValid)
         {
-            _result = Result<int>.Failure("fail");
+            Result = Result<int>.Failure("fail");
             return;
         }
         
-        _result = Result<int>.Success(Value * 2000);
+        Result = Result<int>.Success(Value * 2000);
     }
     
     public Enum GetCurrentStep()
     {
         return TestBSteps.DisconnectAction;
-    }
-    
-    public int Get()
-    {
-        return Value;
-    }
-    
-    public Result<int> GetResult()
-    {
-        return _result;
     }
 }

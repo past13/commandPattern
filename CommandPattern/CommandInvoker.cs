@@ -3,25 +3,40 @@ using CommandPattern.Serialize;
 
 namespace CommandPattern;
 
-public class CommandInvoker<TStep> where TStep : Enum
+public class CommandInvoker<TStep> where TStep : struct, Enum
 {
-    private readonly Dictionary<TStep, SerializableObject?> _commandHistory;
-    public CommandInvoker(Dictionary<TStep, SerializableObject?> commandHistory)
+    private readonly Dictionary<TStep, (Type? CommandType, string SerializedData)> _commandHistory;
+    public CommandInvoker(Dictionary<TStep, (Type? CommandType, string SerializedData)> commandHistory)
     {
-        _commandHistory = commandHistory.Count > 0 ? commandHistory : 
-            Enum.GetValues(typeof(TStep))
-                .Cast<TStep>()
-                .ToDictionary(step => step, SerializableObject? (_) => null);
+        _commandHistory = commandHistory.Count != 0 
+            ? new Dictionary<TStep, (Type? CommandType, string SerializedData)>(commandHistory) 
+            : Enum.GetValues<TStep>().
+                ToDictionary(step => step, _ => ((Type?)null, ""));
     }
 
-    public void ExecuteCommand<TValue, TResult>(ICommandBase<TValue, TResult> command)
+    public void ExecuteCommand(ICommandBase command)
     {
+        var commandList = _commandHistory
+            .Where(entry => entry.Value.CommandType != null)
+            .ToList();
+            
+        if (commandList.Count != 0)
+        {
+            var lastCommand = commandList.Last().Value;
+            var deserializeCommand = SerializableObject.DeserializeCommand(lastCommand.SerializedData, lastCommand.CommandType);
+            if (!deserializeCommand.GetState())
+            {
+                return;
+            }
+        }
+        
         command.Execute();
 
-        var resultData = new CommandResult<TValue, TResult>(command.Get(), command.GetResult());
         if (Enum.TryParse(typeof(TStep), command.GetCurrentStep().ToString(), out var step))
         {
-            _commandHistory[(TStep)step] = new SerializableObject(resultData);
+            var json = SerializableObject.SerializeCommand(command);
+
+            _commandHistory[(TStep)step] = (command.GetType(), json);
         }
         else
         {
@@ -29,7 +44,7 @@ public class CommandInvoker<TStep> where TStep : Enum
         }
     }
     
-    public Dictionary<TStep, SerializableObject?> GetCommandHistory()
+    public Dictionary<TStep, (Type? CommandType, string SerializedData)> GetCommandHistory()
     {
         return _commandHistory;
     }

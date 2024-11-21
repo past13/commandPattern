@@ -2,7 +2,7 @@
 
 namespace CommandPattern.Commands.AddText;
 
-public class AddTextCommand : ICommandBase<string, Result<string>>
+public class AddTextCommand : ICommandBase
 {
     private readonly TextEditor _textEditor;
     private readonly string _textToAdd;
@@ -22,6 +22,11 @@ public class AddTextCommand : ICommandBase<string, Result<string>>
     private void Validate()
     {
         _isValid = false;
+    }
+
+    public bool GetState()
+    {
+        return true;
     }
 
     public void Execute()
